@@ -49,3 +49,10 @@ Server/.DS_Store
 .objs/
 /Unity/.gradle
 /*.user
+/ToolsApp/
+/Unity/Unity.Editor.csproj
+/Unity/Unity.Hotfix.csproj
+/Unity/Unity.HotfixView.csproj
+/Unity/Unity.Model.csproj
+/Unity/Unity.ModelView.csproj
+/Unity/Unity.ThirdParty.csproj
