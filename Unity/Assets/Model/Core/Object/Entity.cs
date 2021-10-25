@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-#if !SERVER
-
-#endif
 
 namespace ET
 {
@@ -35,7 +31,7 @@ namespace ET
         public long InstanceId
         {
             get;
-            set;
+            protected set;
         }
 
         protected Entity()
@@ -48,7 +44,7 @@ namespace ET
 
         [IgnoreDataMember]
         [BsonIgnore]
-        public bool IsFromPool
+        private bool IsFromPool
         {
             get => (this.status & EntityStatus.IsFromPool) == EntityStatus.IsFromPool;
             set
@@ -66,7 +62,7 @@ namespace ET
 
         [IgnoreDataMember]
         [BsonIgnore]
-        public bool IsRegister
+        protected bool IsRegister
         {
             get => (this.status & EntityStatus.IsRegister) == EntityStatus.IsRegister;
             set
@@ -109,7 +105,7 @@ namespace ET
 
         [IgnoreDataMember]
         [BsonIgnore]
-        public bool IsCreate
+        protected bool IsCreate
         {
             get => (this.status & EntityStatus.IsCreate) == EntityStatus.IsCreate;
             set
@@ -133,6 +129,7 @@ namespace ET
         [BsonIgnore]
         protected Entity parent;
 
+        // 可以改变parent，但是不能设置为null
         [IgnoreDataMember]
         [BsonIgnore]
         public Entity Parent
@@ -144,32 +141,33 @@ namespace ET
                 {
                     throw new Exception($"cant set parent null: {this.GetType().Name}");
                 }
+                
+                if (value == this)
+                {
+                    throw new Exception($"cant set parent self: {this.GetType().Name}");
+                }
+
+                // 严格限制parent必须要有domain,也就是说parent必须在数据树上面
+                if (value.Domain == null)
+                {
+                    throw new Exception($"cant set parent because parent domain is null: {this.GetType().Name} {value.GetType().Name}");
+                }
 
                 if (this.parent != null) // 之前有parent
                 {
                     // parent相同，不设置
-                    if (this.parent.InstanceId == value.InstanceId)
+                    if (this.parent == value)
                     {
                         Log.Error($"重复设置了Parent: {this.GetType().Name} parent: {this.parent.GetType().Name}");
                         return;
                     }
-
                     this.parent.RemoveChild(this);
-
-                    this.parent = value;
-                    this.parent.AddChild(this);
-
-                    this.Domain = this.parent.domain;
                 }
-                else
-                {
-                    this.parent = value;
-                    this.parent.AddChild(this);
-
-                    this.IsComponent = false;
-
-                    AfterSetParent();
-                }
+                
+                this.parent = value;
+                this.parent.AddChild(this);
+                this.IsComponent = false;
+                this.Domain = this.parent.domain;
             }
         }
 
@@ -186,23 +184,9 @@ namespace ET
                 }
 
                 this.parent = value;
-
                 this.IsComponent = true;
-
-                AfterSetParent();
+                this.Domain = this.parent.domain;
             }
-        }
-
-        private void AfterSetParent()
-        {
-            this.Domain = this.parent.domain;
-
-#if UNITY_EDITOR && VIEWGO
-            if (this.ViewGO != null && this.parent.ViewGO != null)
-            {
-                this.ViewGO.transform.SetParent(this.parent.ViewGO.transform, false);
-            }
-#endif
         }
 
         public T GetParent<T>() where T : Entity
@@ -228,55 +212,50 @@ namespace ET
         [BsonIgnore]
         public Entity Domain
         {
-            get => this.domain;
-            set
+            get
+            {
+                return this.domain;
+            }
+            private set
             {
                 if (value == null)
                 {
+                    throw new Exception($"domain cant set null: {this.GetType().Name}");
+                }
+                
+                if (this.domain == value)
+                {
                     return;
                 }
-
+                
                 Entity preDomain = this.domain;
                 this.domain = value;
-
-                //if (!(this.domain is Scene))
-                //{
-                //	throw new Exception($"domain is not scene: {this.GetType().Name}");
-                //}
-
+                
                 if (preDomain == null)
                 {
                     this.InstanceId = IdGenerater.Instance.GenerateInstanceId();
-
+                    this.IsRegister = true;
+                    
                     // 反序列化出来的需要设置父子关系
-                    if (!this.IsCreate)
+                    if (this.componentsDB != null)
                     {
-                        if (this.componentsDB != null)
+                        foreach (Entity component in this.componentsDB)
                         {
-                            foreach (Entity component in this.componentsDB)
-                            {
-                                component.IsComponent = true;
-                                this.Components.Add(component.GetType(), component);
-                                component.parent = this;
-                            }
-                        }
-
-                        if (this.childrenDB != null)
-                        {
-                            foreach (Entity child in this.childrenDB)
-                            {
-                                child.IsComponent = false;
-                                this.Children.Add(child.Id, child);
-                                child.parent = this;
-                            }
+                            component.IsComponent = true;
+                            this.Components.Add(component.GetType(), component);
+                            component.parent = this;
                         }
                     }
-                }
 
-                // 是否注册跟parent一致
-                if (this.parent != null)
-                {
-                    this.IsRegister = this.Parent.IsRegister;
+                    if (this.childrenDB != null)
+                    {
+                        foreach (Entity child in this.childrenDB)
+                        {
+                            child.IsComponent = false;
+                            this.Children.Add(child.Id, child);
+                            child.parent = this;
+                        }
+                    }
                 }
 
                 // 递归设置孩子的Domain
@@ -296,8 +275,9 @@ namespace ET
                     }
                 }
 
-                if (preDomain == null && !this.IsCreate)
+                if (!this.IsCreate)
                 {
+                    this.IsCreate = true;
                     EventSystem.Instance.Deserialize(this);
                 }
             }
@@ -314,7 +294,17 @@ namespace ET
 
         [IgnoreDataMember]
         [BsonIgnore]
-        public Dictionary<long, Entity> Children => this.children ?? (this.children = childrenPool.Fetch());
+        public Dictionary<long, Entity> Children
+        {
+            get
+            {
+                if (this.children == null)
+                {
+                    this.children = childrenPool.Fetch();
+                }
+                return this.children;
+            }
+        }
 
         private void AddChild(Entity entity)
         {
@@ -347,10 +337,7 @@ namespace ET
                 return;
             }
 
-            if (this.childrenDB == null)
-            {
-                this.childrenDB = hashSetPool.Fetch();
-            }
+            this.childrenDB = this.childrenDB ?? hashSetPool.Fetch();
 
             this.childrenDB.Add(entity);
         }
@@ -390,7 +377,17 @@ namespace ET
 
         [IgnoreDataMember]
         [BsonIgnore]
-        public Dictionary<Type, Entity> Components => this.components ?? (this.components = dictPool.Fetch());
+        public Dictionary<Type, Entity> Components
+        {
+            get
+            {
+                if (this.components == null)
+                {
+                    this.components = dictPool.Fetch();
+                }
+                return this.components;
+            }
+        }
 
         public override void Dispose()
         {
@@ -399,7 +396,7 @@ namespace ET
                 return;
             }
 
-            EventSystem.Instance.Remove(this.InstanceId);
+            this.IsRegister = false;
             this.InstanceId = 0;
 
             // 清理Component
@@ -550,95 +547,6 @@ namespace ET
             return child as K;
         }
 
-        public Entity AddComponent(Entity component)
-        {
-            Type type = component.GetType();
-            if (this.components != null && this.components.ContainsKey(type))
-            {
-                throw new Exception($"entity already has component: {type.FullName}");
-            }
-
-            component.ComponentParent = this;
-
-            this.AddToComponent(type, component);
-
-            return component;
-        }
-
-        public Entity AddComponent(Type type)
-        {
-            if (this.components != null && this.components.ContainsKey(type))
-            {
-                throw new Exception($"entity already has component: {type.FullName}");
-            }
-
-            Entity component = CreateWithComponentParent(type);
-
-            this.AddToComponent(type, component);
-
-            return component;
-        }
-
-        public K AddComponent<K>() where K : Entity, new()
-        {
-            Type type = typeof (K);
-            if (this.components != null && this.components.ContainsKey(type))
-            {
-                throw new Exception($"entity already has component: {type.FullName}");
-            }
-
-            K component = CreateWithComponentParent<K>();
-
-            this.AddToComponent(type, component);
-            
-            return component;
-        }
-
-        public K AddComponent<K, P1>(P1 p1) where K : Entity, new()
-        {
-            Type type = typeof (K);
-            if (this.components != null && this.components.ContainsKey(type))
-            {
-                throw new Exception($"entity already has component: {type.FullName}");
-            }
-
-            K component = CreateWithComponentParent<K, P1>(p1);
-
-            this.AddToComponent(type, component);
-
-            return component;
-        }
-
-        public K AddComponent<K, P1, P2>(P1 p1, P2 p2) where K : Entity, new()
-        {
-            Type type = typeof (K);
-            if (this.components != null && this.components.ContainsKey(type))
-            {
-                throw new Exception($"entity already has component: {type.FullName}");
-            }
-
-            K component = CreateWithComponentParent<K, P1, P2>(p1, p2);
-
-            this.AddToComponent(type, component);
-
-            return component;
-        }
-
-        public K AddComponent<K, P1, P2, P3>(P1 p1, P2 p2, P3 p3) where K : Entity, new()
-        {
-            Type type = typeof (K);
-            if (this.components != null && this.components.ContainsKey(type))
-            {
-                throw new Exception($"entity already has component: {type.FullName}");
-            }
-
-            K component = CreateWithComponentParent<K, P1, P2, P3>(p1, p2, p3);
-
-            this.AddToComponent(type, component);
-
-            return component;
-        }
-
         public void RemoveComponent<K>() where K : Entity
         {
             if (this.IsDisposed)
@@ -736,6 +644,226 @@ namespace ET
                 return null;
             }
 
+            return component;
+        }
+        
+        private static Entity Create(Type type, bool isFromPool)
+        {
+            Entity component;
+            if (isFromPool)
+            {
+                component = (Entity)ObjectPool.Instance.Fetch(type);
+            }
+            else
+            {
+                component = (Entity)Activator.CreateInstance(type);
+            }
+            component.IsFromPool = isFromPool;
+            component.IsCreate = true;
+            component.Id = 0;
+            return component;
+        }
+
+        public Entity AddComponent(Entity component)
+        {
+            Type type = component.GetType();
+            if (this.components != null && this.components.ContainsKey(type))
+            {
+                throw new Exception($"entity already has component: {type.FullName}");
+            }
+
+            component.ComponentParent = this;
+
+            this.AddToComponent(type, component);
+
+            return component;
+        }
+
+        public Entity AddComponent(Type type, bool isFromPool = false)
+        {
+            if (this.components != null && this.components.ContainsKey(type))
+            {
+                throw new Exception($"entity already has component: {type.FullName}");
+            }
+
+            Entity component = Create(type, isFromPool);
+            component.Id = this.Id;
+            component.ComponentParent = this;
+            EventSystem.Instance.Awake(component);
+
+            this.AddToComponent(type, component);
+
+            return component;
+        }
+
+        public K AddComponent<K>(bool isFromPool = false) where K : Entity, new()
+        {
+            Type type = typeof (K);
+            if (this.components != null && this.components.ContainsKey(type))
+            {
+                throw new Exception($"entity already has component: {type.FullName}");
+            }
+
+            Entity component = Create(type, isFromPool);
+            component.Id = this.Id;
+            component.ComponentParent = this;
+            EventSystem.Instance.Awake(component);
+
+            this.AddToComponent(type, component);
+            
+            return component as K;
+        }
+
+        public K AddComponent<K, P1>(P1 p1, bool isFromPool = false) where K : Entity, new()
+        {
+            Type type = typeof (K);
+            if (this.components != null && this.components.ContainsKey(type))
+            {
+                throw new Exception($"entity already has component: {type.FullName}");
+            }
+
+            Entity component = Create(type, isFromPool);
+            component.Id = this.Id;
+            component.ComponentParent = this;
+            EventSystem.Instance.Awake(component, p1);
+
+            this.AddToComponent(type, component);
+
+            return component as K;
+        }
+
+        public K AddComponent<K, P1, P2>(P1 p1, P2 p2, bool isFromPool = false) where K : Entity, new()
+        {
+            Type type = typeof (K);
+            if (this.components != null && this.components.ContainsKey(type))
+            {
+                throw new Exception($"entity already has component: {type.FullName}");
+            }
+
+            Entity component = Create(type, isFromPool);
+            component.Id = this.Id;
+            component.ComponentParent = this;
+            EventSystem.Instance.Awake(component, p1, p2);
+            
+            this.AddToComponent(type, component);
+
+            return component as K;
+        }
+
+        public K AddComponent<K, P1, P2, P3>(P1 p1, P2 p2, P3 p3, bool isFromPool = false) where K : Entity, new()
+        {
+            Type type = typeof (K);
+            if (this.components != null && this.components.ContainsKey(type))
+            {
+                throw new Exception($"entity already has component: {type.FullName}");
+            }
+
+            Entity component = Create(type, isFromPool);
+            component.Id = this.Id;
+            component.ComponentParent = this;
+            EventSystem.Instance.Awake(component, p1, p2, p3);
+
+            this.AddToComponent(type, component);
+
+            return component as K;
+        }
+
+        public T AddChild<T>(bool isFromPool = false) where T : Entity
+        {
+            Type type = typeof (T);
+            T component = (T) Entity.Create(type, isFromPool);
+            component.Id = IdGenerater.Instance.GenerateId();
+            component.Parent = this;
+
+            EventSystem.Instance.Awake(component);
+            return component;
+        }
+
+        public T AddChild<T, A>(A a, bool isFromPool = false) where T : Entity
+        {
+            Type type = typeof (T);
+            T component = (T) Entity.Create(type, isFromPool);
+            component.Id = IdGenerater.Instance.GenerateId();
+            component.Parent = this;
+
+            EventSystem.Instance.Awake(component, a);
+            return component;
+        }
+
+        public T AddChild<T, A, B>(A a, B b, bool isFromPool = false) where T : Entity
+        {
+            Type type = typeof (T);
+            T component = (T) Entity.Create(type, isFromPool);
+            component.Id = IdGenerater.Instance.GenerateId();
+            component.Parent = this;
+
+            EventSystem.Instance.Awake(component, a, b);
+            return component;
+        }
+
+        public T AddChild<T, A, B, C>(A a, B b, C c, bool isFromPool = false) where T : Entity
+        {
+            Type type = typeof (T);
+            T component = (T) Entity.Create(type, isFromPool);
+            component.Id = IdGenerater.Instance.GenerateId();
+            component.Parent = this;
+
+            EventSystem.Instance.Awake(component, a, b, c);
+            return component;
+        }
+
+        public T AddChild<T, A, B, C, D>(A a, B b, C c, D d, bool isFromPool = false) where T : Entity
+        {
+            Type type = typeof (T);
+            T component = (T) Entity.Create(type, isFromPool);
+            component.Id = IdGenerater.Instance.GenerateId();
+            component.Parent = this;
+
+            EventSystem.Instance.Awake(component, a, b, c, d);
+            return component;
+        }
+
+        public T AddChildWithId<T>(long id, bool isFromPool = false) where T : Entity
+        {
+            Type type = typeof (T);
+            T component = (T) Entity.Create(type, isFromPool);
+            component.Id = id;
+            component.Parent = this;
+
+            EventSystem.Instance.Awake(component);
+            return component;
+        }
+
+        public T AddChildWithId<T, A>(long id, A a, bool isFromPool = false) where T : Entity
+        {
+            Type type = typeof (T);
+            T component = (T) Entity.Create(type, isFromPool);
+            component.Id = id;
+            component.Parent = this;
+
+            EventSystem.Instance.Awake(component, a);
+            return component;
+        }
+
+        public T AddChildWithId<T, A, B>(long id, A a, B b, bool isFromPool = false) where T : Entity
+        {
+            Type type = typeof (T);
+            T component = (T) Entity.Create(type, isFromPool);
+            component.Id = id;
+            component.Parent = this;
+
+            EventSystem.Instance.Awake(component, a, b);
+            return component;
+        }
+
+        public T AddChildWithId<T, A, B, C>(long id, A a, B b, C c, bool isFromPool = false) where T : Entity
+        {
+            Type type = typeof (T);
+            T component = (T) Entity.Create(type, isFromPool);
+            component.Id = id;
+            component.Parent = this;
+
+            EventSystem.Instance.Awake(component, a, b, c);
             return component;
         }
     }

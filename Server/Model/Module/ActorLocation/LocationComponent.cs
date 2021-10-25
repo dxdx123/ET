@@ -60,8 +60,7 @@ namespace ET
         {
             CoroutineLock coroutineLock = await CoroutineLockComponent.Instance.Wait(CoroutineLockType.Location, key);
 
-            LockInfo lockInfo = EntityFactory.Create<LockInfo, long, CoroutineLock>(this.Domain, instanceId, coroutineLock);
-            lockInfo.Parent = this;
+            LockInfo lockInfo = this.AddChild<LockInfo, long, CoroutineLock>(instanceId, coroutineLock);
             this.lockInfos.Add(key, lockInfo);
 
             Log.Debug($"location lock key: {key} instanceId: {instanceId}");
