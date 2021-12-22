@@ -11,7 +11,7 @@ namespace ET
     public class ServerCommandLineEditor: EditorWindow
     {
 
-        [MenuItem("Tools/打开服务器选项")]
+        [MenuItem("Tools/打开服务器选项 _F4")]
         private static void ShowWindow()
         {
             GetWindow(typeof (ServerCommandLineEditor));
@@ -24,6 +24,18 @@ namespace ET
             if (GUILayout.Button("启动MongoDB数据库"))
             {
                 ProcessHelper.Run("mongod", @"--dbpath=db", "../Tools/MongoDB/bin/");
+            }
+            
+            if (GUILayout.Button("导出Excel配置表"))
+            {
+                string arguments = $"--AppType=ExcelExporter";
+                ProcessHelper.Run("Tools.dll", arguments, "../Bin/");
+            }
+            
+            if (GUILayout.Button("生成Proto2CS"))
+            {
+                string arguments = $"--AppType=Proto2CS";
+                ProcessHelper.Run("Tools.dll", arguments, "../Bin/");
             }
             
             if (GUILayout.Button("启动守护进程(Watcher)"))
