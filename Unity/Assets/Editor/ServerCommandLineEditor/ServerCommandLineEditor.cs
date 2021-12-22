@@ -23,7 +23,7 @@ namespace ET
 
             if (GUILayout.Button("启动MongoDB数据库"))
             {
-                ProcessHelper.Run("mongod", @"--dbpath=db", "../Tools/mongodb/bin/");
+                ProcessHelper.Run("mongod", @"--dbpath=db", "../Tools/MongoDB/bin/");
             }
             
             if (GUILayout.Button("启动守护进程(Watcher)"))
