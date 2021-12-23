@@ -49,6 +49,19 @@ message G2C_EnterMap // IResponse
 	repeated UnitInfo Units = 2;
 }
 
+//ResponseType G2C_QuitMap
+message C2G_QuitMap // IRequest
+{
+	int32 RpcId = 90;
+}
+
+message G2C_QuitMap // IResponse
+{
+	int32 RpcId = 90;
+	int32 Error = 91;
+	string Message = 92;
+}
+
 message UnitInfo
 {
 	int64 UnitId = 1;
