@@ -19,12 +19,12 @@ namespace ET
             Scene zoneScene = aiComponent.DomainScene();
 
             Unit myUnit = zoneScene.GetComponent<UnitComponent>().MyUnit;
-            if (myUnit == null)
+            if (myUnit == null || myUnit.IsDisposed)
             {
                 return;
             }
             
-            Log.Debug("开始巡逻");
+            Log.Debug($"{myUnit.Id}开始巡逻");
 
             while (true)
             {

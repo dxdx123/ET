@@ -20,10 +20,8 @@ namespace ET
 
 		public static void OnLoginClick(this DlgLogin self)
 		{
-			//UIComponent.Instance.ShowWindow(WindowID.WindowID_Test);
 			LoginHelper.Login(self.DomainScene(), ConstValue.LoginAddress,
 				self.View.EInputField_Account.text, self.View.EInputField_Password.text);
-			//UIComponent.Instance.CloseWindow(WindowID.WindowID_Login);
 		}
 
 	}

@@ -101,6 +101,35 @@ namespace ET
 
 	}
 
+	[ResponseType(nameof(G2C_QuitMap))]
+	[Message(OuterOpcode.C2G_QuitMap)]
+	[ProtoContract]
+	public partial class C2G_QuitMap: Object, IRequest
+	{
+		[ProtoMember(90)]
+		public int RpcId { get; set; }
+
+// 自己的unit id
+		[ProtoMember(1)]
+		public long UnitId { get; set; }
+
+	}
+
+	[Message(OuterOpcode.G2C_QuitMap)]
+	[ProtoContract]
+	public partial class G2C_QuitMap: Object, IResponse
+	{
+		[ProtoMember(90)]
+		public int RpcId { get; set; }
+
+		[ProtoMember(91)]
+		public int Error { get; set; }
+
+		[ProtoMember(92)]
+		public string Message { get; set; }
+
+	}
+
 	[Message(OuterOpcode.UnitInfo)]
 	[ProtoContract]
 	public partial class UnitInfo: Object
@@ -141,6 +170,23 @@ namespace ET
 		[ProtoMember(2)]
 		public List<UnitInfo> Units = new List<UnitInfo>();
 
+	}
+
+	[Message(OuterOpcode.M2C_UnitQuitMap)]
+	[ProtoContract]
+	public partial class M2C_UnitQuitMap: Object, IActorMessage
+	{
+		[ProtoMember(90)]
+		public int RpcId { get; set; }
+
+		[ProtoMember(93)]
+		public long ActorId { get; set; }
+
+// 退出的玩家Unit Id
+		[ProtoMember(1)]
+		public long UnitId { get; set; }
+
+//repeated UnitInfo Units = 2;
 	}
 
 	[Message(OuterOpcode.C2M_PathfindingResult)]

@@ -388,6 +388,44 @@ namespace ET
 
 	}
 
+	[ResponseType(nameof(M2G_UnitQuitMap))]
+	[Message(InnerOpcode.G2M_UnitQuitMap)]
+	[ProtoContract]
+	public partial class G2M_UnitQuitMap: Object, IActorRequest
+	{
+		[ProtoMember(90)]
+		public int RpcId { get; set; }
+
+		[ProtoMember(93)]
+		public long ActorId { get; set; }
+
+		[ProtoMember(1)]
+		public long UnitId { get; set; }
+
+		[ProtoMember(2)]
+		public long GateSessionId { get; set; }
+
+	}
+
+	[Message(InnerOpcode.M2G_UnitQuitMap)]
+	[ProtoContract]
+	public partial class M2G_UnitQuitMap: Object, IActorResponse
+	{
+		[ProtoMember(90)]
+		public int RpcId { get; set; }
+
+		[ProtoMember(91)]
+		public int Error { get; set; }
+
+		[ProtoMember(92)]
+		public string Message { get; set; }
+
+// 所有的unit
+		[ProtoMember(2)]
+		public List<UnitInfo> Units = new List<UnitInfo>();
+
+	}
+
 	[Message(InnerOpcode.G2M_SessionDisconnect)]
 	[ProtoContract]
 	public partial class G2M_SessionDisconnect: Object, IActorLocationMessage

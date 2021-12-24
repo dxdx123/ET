@@ -19,7 +19,7 @@ namespace ET
             Scene zoneScene = aiComponent.DomainScene();
 
             Unit myUnit = zoneScene.GetComponent<UnitComponent>().MyUnit;
-            if (myUnit == null)
+            if (myUnit == null || myUnit.IsDisposed)
             {
                 return;
             }
@@ -27,7 +27,7 @@ namespace ET
             // 停在当前位置
             zoneScene.GetComponent<SessionComponent>().Session.Send(new C2M_Stop());
             
-            Log.Debug("开始攻击");
+            Log.Debug($"{myUnit.Id}开始攻击");
 
             for (int i = 0; i < 100000; ++i)
             {

@@ -15,6 +15,8 @@ namespace ET
 				mapInstanceId, new G2M_CreateUnit() { PlayerId = player.Id, GateSessionId = session.InstanceId });
 			player.UnitId = createUnit.UnitId;
 			response.UnitId = createUnit.UnitId;
+			
+			Log.Info($"玩家{player.UnitId}进入房间");
 			reply();
 		}
 	}

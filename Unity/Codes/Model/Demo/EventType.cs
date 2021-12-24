@@ -51,11 +51,26 @@
         {
             public Scene Scene;
         }
-
+        
         public struct EnterMapFinish
         {
             public Scene ZoneScene;
         }
+        
+        // 别的玩家退出
+        public struct LeaveMapFinish
+        {
+            public Scene ZoneScene;
+            public Unit Unit;
+        }
+
+        // 玩家自己退出
+        public struct QuitMapFinish
+        {
+            public Scene ZoneScene;
+            public Unit Unit;
+        }
+        
 
         public struct AfterUnitCreate
         {

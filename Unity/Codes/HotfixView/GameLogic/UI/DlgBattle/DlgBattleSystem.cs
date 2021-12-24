@@ -20,8 +20,7 @@ namespace ET
 
 		public static void OnExitClick(this DlgBattle self)
 		{
-			Log.Debug("退出房间");
-			
+			QuitMapHelper.QuitMap(self.DomainScene());
 		}
 
 	}

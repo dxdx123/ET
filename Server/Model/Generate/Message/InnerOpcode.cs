@@ -24,6 +24,8 @@ namespace ET
 		 public const ushort G2R_GetLoginKey = 20021;
 		 public const ushort G2M_CreateUnit = 20022;
 		 public const ushort M2G_CreateUnit = 20023;
-		 public const ushort G2M_SessionDisconnect = 20024;
+		 public const ushort G2M_UnitQuitMap = 20024;
+		 public const ushort M2G_UnitQuitMap = 20025;
+		 public const ushort G2M_SessionDisconnect = 20026;
 	}
 }
