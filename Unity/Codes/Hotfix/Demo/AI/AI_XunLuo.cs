@@ -26,7 +26,7 @@ namespace ET
             
             Log.Debug($"{myUnit.Id}开始巡逻");
 
-            while (true)
+            /*while (true)
             {
                 XunLuoPathComponent xunLuoPathComponent = myUnit.GetComponent<XunLuoPathComponent>();
                 Vector3 nextTarget = xunLuoPathComponent.GetCurrent();
@@ -36,7 +36,8 @@ namespace ET
                     return;
                 }
                 xunLuoPathComponent.MoveNext();
-            }
+            }*/
+            await ETTask.CompletedTask;
         }
     }
 }
