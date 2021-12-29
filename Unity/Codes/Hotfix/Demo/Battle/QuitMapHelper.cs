@@ -12,11 +12,9 @@
             var quit = await gateSession.Call(new C2G_QuitMap() { UnitId = unitComponent.MyUnit.Id });
             if (quit.Error == 0)
             {
+                Game.EventSystem.Publish(new EventType.QuitMapFinish() { ZoneScene = zoneScene, Unit = unitComponent.MyUnit }).Coroutine();
                 // 销毁Unit逻辑对象
                 unitComponent.RemoveAll();
-
-                Game.EventSystem.Publish(new EventType.QuitMapFinish() { ZoneScene = zoneScene, Unit = unitComponent.MyUnit }).Coroutine();
-                
                 Log.Info($"玩家[{unitComponent.MyUnit.Id}]主动退出房间");
             }
         }
