@@ -52,7 +52,12 @@ namespace ET
 			var mainCameraTransform = this.mainCamera.transform;
 			Vector3 cameraPos = mainCameraTransform.position;
 			mainCameraTransform.position = new Vector3(this.Unit.Position.x, cameraPos.y, this.Unit.Position.z - 1);
-			mainCameraTransform.LookAt(this.Unit.GetComponent<GameObjectComponent>().GameObject.transform);
+
+			var unitView = this.Unit.GetComponent<GameObjectComponent>();
+			if (unitView != null)
+			{
+				mainCameraTransform.LookAt(unitView.GameObject.transform);
+			}
 		}
 	}
 }
