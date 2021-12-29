@@ -46,10 +46,11 @@ namespace ET
                 GameObject go;
                 if (self.UnitId2GameObjects.TryGetValue(unitId, out go))
                 {
-                    self.UnitId2GameObjects.Remove(unitId);
+                    //self.UnitId2GameObjects.Remove(unitId);
                     UnityEngine.Object.Destroy(go); 
                 }
             }
+            self.UnitId2GameObjects.Clear();
         }
     }
 }
