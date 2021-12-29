@@ -13,8 +13,9 @@ namespace ET
 
                 UnitComponent unitComponent = zoneScene.GetComponent<UnitComponent>();
                 unitComponent.MyUnit = unitComponent.Get(g2CEnterMap.UnitId);
-                
-                Game.EventSystem.Publish(new EventType.EnterMapFinish() {ZoneScene = zoneScene}).Coroutine();
+                unitComponent.MyUnit.RemoveComponent<XunLuoPathComponent>();
+
+                Game.EventSystem.Publish(new EventType.EnterMapFinish() { ZoneScene = zoneScene, MyUnit = unitComponent.MyUnit }).Coroutine();
             }
             catch (Exception e)
             {

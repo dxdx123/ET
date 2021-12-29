@@ -55,6 +55,7 @@
         public struct EnterMapFinish
         {
             public Scene ZoneScene;
+            public Unit MyUnit;
         }
         
         // 别的玩家退出

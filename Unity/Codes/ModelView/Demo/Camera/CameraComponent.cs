@@ -3,11 +3,11 @@
 namespace ET
 {
 	[ObjectSystem]
-	public class CameraComponentAwakeSystem : AwakeSystem<CameraComponent>
+	public class CameraComponentAwakeSystem : AwakeSystem<CameraComponent, Unit>
 	{
-		public override void Awake(CameraComponent self)
+		public override void Awake(CameraComponent self, Unit unit)
 		{
-			self.Awake();
+			self.Awake(unit);
 		}
 	}
 
@@ -35,9 +35,10 @@ namespace ET
 			}
 		}
 
-		public void Awake()
+		public void Awake(Unit unit)
 		{
 			this.mainCamera = Camera.main;
+			this.Unit = unit;
 		}
 
 		public void LateUpdate()
@@ -48,8 +49,10 @@ namespace ET
 
 		private void UpdatePosition()
 		{
-			Vector3 cameraPos = this.mainCamera.transform.position;
-			this.mainCamera.transform.position = new Vector3(this.Unit.Position.x, cameraPos.y, this.Unit.Position.z - 1);
+			var mainCameraTransform = this.mainCamera.transform;
+			Vector3 cameraPos = mainCameraTransform.position;
+			mainCameraTransform.position = new Vector3(this.Unit.Position.x, cameraPos.y, this.Unit.Position.z - 1);
+			mainCameraTransform.LookAt(this.Unit.GetComponent<GameObjectComponent>().GameObject.transform);
 		}
 	}
 }

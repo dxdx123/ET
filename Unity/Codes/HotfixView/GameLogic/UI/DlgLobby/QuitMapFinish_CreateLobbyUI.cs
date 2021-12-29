@@ -33,6 +33,8 @@ namespace ET
 			#endregion
 			
 			args.ZoneScene.RemoveComponent<OperaComponent>();
+			args.ZoneScene.RemoveComponent<CameraComponent>();
+			
 			UIComponent.Instance.CloseWindow(WindowID.WindowID_Battle);
 			await UIComponent.Instance.ShowWindowAsync(WindowID.WindowID_Lobby);
 		}
