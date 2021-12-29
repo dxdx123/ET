@@ -7,9 +7,9 @@ namespace ET
         protected override async ETTask Run(EventType.LeaveMapFinish args)
         {
             // View层处理玩家退出
-            args.Unit?.Dispose();
+            Log.Info($"销毁玩家{args.UnitId}GameObject");
+            GlobalComponent.Instance.RemoveUnitGo(args.UnitId);
             
-            //GlobalComponent.Instance.Unit.
             await ETTask.CompletedTask;
         }
     }

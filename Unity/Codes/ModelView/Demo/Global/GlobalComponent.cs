@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace ET
@@ -5,6 +6,7 @@ namespace ET
     public class GlobalComponent: Entity
     {
         public static GlobalComponent Instance;
+        public Dictionary<long, GameObject> UnitId2GameObjects = new Dictionary<long, GameObject>();
         
         public Transform Global;
         public Transform Unit;

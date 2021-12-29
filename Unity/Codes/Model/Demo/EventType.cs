@@ -62,7 +62,7 @@
         public struct LeaveMapFinish
         {
             public Scene ZoneScene;
-            public Unit Unit;
+            public long UnitId;
         }
 
         // 玩家自己退出

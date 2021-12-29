@@ -11,7 +11,7 @@ namespace ET
 			unitComponent.Remove(message.UnitId);
 			Log.Info($"房间还剩{unitComponent.idUnits.Count}个玩家");
 			
-			Game.EventSystem.Publish(new EventType.LeaveMapFinish() { ZoneScene = session.DomainScene(), Unit = unitComponent.MyUnit }).Coroutine();
+			Game.EventSystem.Publish(new EventType.LeaveMapFinish() { ZoneScene = session.DomainScene(), UnitId = message.UnitId }).Coroutine();
 			await ETTask.CompletedTask;
 		}
 	}
