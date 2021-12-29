@@ -7,11 +7,7 @@ namespace ET
 		protected override async ETTask Run(EventType.QuitMapFinish args)
 		{
 			// 销毁Map上的gameObject
-			for (int i = 0; i < GlobalComponent.Instance.Unit.childCount; i++)
-			{
-				var child = GlobalComponent.Instance.Unit.GetChild(i);
-				UnityEngine.Object.Destroy(child.gameObject);
-			}
+			GlobalComponent.Instance.RemoveAllUnitGo();
 
 			#region 切换到场景
 			// 加载场景资源

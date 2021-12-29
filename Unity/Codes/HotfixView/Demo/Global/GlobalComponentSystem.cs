@@ -38,5 +38,18 @@ namespace ET
                 UnityEngine.Object.Destroy(go);
             }
         }
+        
+        public static void RemoveAllUnitGo(this GlobalComponent self)
+        {
+            foreach (var unitId in self.UnitId2GameObjects.Keys)
+            {
+                GameObject go;
+                if (self.UnitId2GameObjects.TryGetValue(unitId, out go))
+                {
+                    self.UnitId2GameObjects.Remove(unitId);
+                    UnityEngine.Object.Destroy(go); 
+                }
+            }
+        }
     }
 }

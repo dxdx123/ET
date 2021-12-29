@@ -15,9 +15,9 @@
                 // 销毁Unit逻辑对象
                 unitComponent.RemoveAll();
 
-                await Game.EventSystem.Publish(new EventType.QuitMapFinish() { ZoneScene = zoneScene, Unit = unitComponent.MyUnit });
+                Game.EventSystem.Publish(new EventType.QuitMapFinish() { ZoneScene = zoneScene, Unit = unitComponent.MyUnit }).Coroutine();
                 
-                Log.Info($"玩家{unitComponent.MyUnit.Id}主动退出房间");
+                Log.Info($"玩家[{unitComponent.MyUnit.Id}]主动退出房间");
             }
         }
     }
