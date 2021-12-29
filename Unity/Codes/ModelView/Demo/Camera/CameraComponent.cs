@@ -51,7 +51,9 @@ namespace ET
 		{
 			var mainCameraTransform = this.mainCamera.transform;
 			Vector3 cameraPos = mainCameraTransform.position;
-			mainCameraTransform.position = new Vector3(this.Unit.Position.x, cameraPos.y, this.Unit.Position.z - 1);
+			var offsetX = 5; 
+			var offsetY = 5;
+			mainCameraTransform.position = new Vector3(this.Unit.Position.x - offsetX, offsetY, this.Unit.Position.z);
 
 			var unitView = this.Unit.GetComponent<GameObjectComponent>();
 			if (unitView != null)
