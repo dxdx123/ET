@@ -13,12 +13,7 @@
             if (quit.Error == 0)
             {
                 // 销毁Unit逻辑对象
-                var myUnit = zoneScene.GetComponent<UnitComponent>().MyUnit;
-                myUnit.Dispose();
-                foreach (var unit in unitComponent.idUnits)
-                {
-                    unitComponent.Remove(unit.Key);
-                }
+                unitComponent.RemoveAll();
 
                 await Game.EventSystem.Publish(new EventType.QuitMapFinish() { ZoneScene = zoneScene, Unit = unitComponent.MyUnit });
                 

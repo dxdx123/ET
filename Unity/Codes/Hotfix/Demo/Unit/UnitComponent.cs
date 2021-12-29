@@ -46,6 +46,17 @@ namespace ET
 			self.idUnits.Remove(id);
 			unit?.Dispose();
 		}
+		
+		public static void RemoveAll(this UnitComponent self)
+		{
+			foreach (var unitId in self.idUnits.Keys)
+			{
+				Unit unit;
+				self.idUnits.TryGetValue(unitId, out unit);
+				self.idUnits.Remove(unitId);
+				unit?.Dispose();
+			}
+		}
 
 		public static void RemoveNoDispose(this UnitComponent self, long id)
 		{
