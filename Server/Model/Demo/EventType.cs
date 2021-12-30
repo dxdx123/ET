@@ -19,6 +19,7 @@
 		public struct MoveStart
 		{
 			public Unit Unit;
+			public float Speed;
 		}
 
 		public struct MoveStop

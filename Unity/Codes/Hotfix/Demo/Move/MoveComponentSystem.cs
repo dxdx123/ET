@@ -96,7 +96,7 @@ namespace ET
             ETTask<bool> tcs = ETTask<bool>.Create(true);
             self.Callback = (ret) => { tcs.SetResult(ret); };
 
-            Game.EventSystem.Publish(new EventType.MoveStart(){Unit = self.GetParent<Unit>()}).Coroutine();
+            Game.EventSystem.Publish(new EventType.MoveStart() { Unit = self.GetParent<Unit>(), Speed = speed }).Coroutine();
             
             self.StartMove();
             
