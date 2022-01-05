@@ -58,7 +58,7 @@ namespace ET
         public struct EnterMapFinish
         {
             public Scene ZoneScene;
-            public Unit MyUnit;
+            public long MyUnitId;
         }
         
         // 别的玩家退出
@@ -72,7 +72,7 @@ namespace ET
         public struct QuitMapFinish
         {
             public Scene ZoneScene;
-            public Unit Unit;
+            public long UnitId;
         }
         
 

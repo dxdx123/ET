@@ -51,8 +51,9 @@
      <Compile Include="Assets\Mono\ILRuntime\Generate\System_Collections_Generic_Dictionary_2_String_ILTypeInstance_Binding.cs" />
      <Compile Include="Assets\Mono\ILRuntime\Generate\System_Collections_Generic_Dictionary_2_Type_List_1_Object_Binding.cs" />
      <Compile Include="Assets\Mono\Core\UnOrderMultiMap.cs" />
-     <Compile Include="Assets\Mono\ILRuntime\Generate\System_IDisposable_Binding.cs" />
+     <Compile Include="Assets\Mono\Module\NetworkTCP\WChannel.cs" />
      <Compile Include="Assets\Mono\ILRuntime\Generate\UnityEngine_AssetBundleRequest_Binding.cs" />
+     <Compile Include="Assets\Mono\ILRuntime\Generate\System_IDisposable_Binding.cs" />
      <Compile Include="Assets\Mono\ILRuntime\Generate\ET_StringHelper_Binding.cs" />
      <Compile Include="Assets\Mono\ILRuntime\Generate\System_Text_StringBuilder_Binding.cs" />
      <Compile Include="Assets\Mono\ILRuntime\Generate\System_Collections_Generic_KeyValuePair_2_Int64_ILTypeInstance_Bindin.cs" />
@@ -73,8 +74,6 @@
      <Compile Include="Assets\Mono\ILRuntime\Generate\System_BitConverter_Binding.cs" />
      <Compile Include="Assets\Mono\Core\Helper\NetworkHelper.cs" />
      <Compile Include="Assets\Mono\Core\DoubleMap.cs" />
-     <Compile Include="Assets\Mono\Module\NetworkTCP\WChannel.cs" />
-     <Compile Include="Assets\Mono\Module\NetworkTCP\WService.cs" />
      <Compile Include="Assets\Mono\MonoBehaviour\Init.cs" />
      <Compile Include="Assets\Mono\ILRuntime\Generate\System_Collections_Generic_Dictionary_2_String_ILTypeInstance_Binding_t3.cs" />
      <Compile Include="Assets\Mono\ILRuntime\Generate\System_Collections_Generic_Dictionary_2_Type_ILTypeInstance_Binding_V.cs" />
@@ -114,6 +113,7 @@
      <Compile Include="Assets\Mono\ILRuntime\Generate\System_Collections_Generic_HashSet_1_Type_Binding.cs" />
      <Compile Include="Assets\Mono\ILRuntime\Generate\System_Collections_Generic_HashSet_1_ILTypeInstance_Binding.cs" />
      <Compile Include="Assets\Mono\ILRuntime\Generate\System_Runtime_CompilerServices_TaskAwaiter_Binding.cs" />
+     <Compile Include="Assets\Mono\Module\NetworkTCP\WService.cs" />
      <Compile Include="Assets\Mono\Module\Network\AChannel.cs" />
      <Compile Include="Assets\Mono\ILRuntime\Generate\System_Activator_Binding.cs" />
      <Compile Include="Assets\Mono\Module\Mongo\BsonIdAttribute.cs" />

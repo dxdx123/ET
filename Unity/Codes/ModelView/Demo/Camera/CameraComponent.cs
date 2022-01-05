@@ -3,11 +3,11 @@
 namespace ET
 {
 	[ObjectSystem]
-	public class CameraComponentAwakeSystem : AwakeSystem<CameraComponent, Unit>
+	public class CameraComponentAwakeSystem : AwakeSystem<CameraComponent, Scene, long>
 	{
-		public override void Awake(CameraComponent self, Unit unit)
+		public override void Awake(CameraComponent self, Scene zoneScene, long myUnitId)
 		{
-			self.Awake(unit);
+			self.Awake(zoneScene, myUnitId);
 		}
 	}
 
@@ -35,10 +35,11 @@ namespace ET
 			}
 		}
 
-		public void Awake(Unit unit)
+		public void Awake(Scene zoneScene, long myUnitId)
 		{
 			this.mainCamera = Camera.main;
-			this.Unit = unit;
+			var unitComponent = zoneScene.GetComponent<UnitComponent>();
+			this.Unit = unitComponent.idUnits[myUnitId];
 		}
 
 		public void LateUpdate()

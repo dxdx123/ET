@@ -13,8 +13,8 @@ namespace ET
 
                 UnitComponent unitComponent = zoneScene.GetComponent<UnitComponent>();
                 unitComponent.MyId = g2CEnterMap.MyId;
-                
-                Game.EventSystem.Publish(new EventType.EnterMapFinish() {ZoneScene = zoneScene, MyUnit = unitComponent.MyUnit });
+
+                Game.EventSystem.Publish(new EventType.EnterMapFinish() { ZoneScene = zoneScene, MyUnitId = unitComponent.MyId });
             }
             catch (Exception e)
             {

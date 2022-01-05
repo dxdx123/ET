@@ -25,7 +25,7 @@ namespace ET
 			#endregion
 			
 			args.ZoneScene.AddComponent<OperaComponent>();
-			args.ZoneScene.AddComponent<CameraComponent, Unit>(args.MyUnit);
+			args.ZoneScene.AddComponent<CameraComponent, Scene, long>(args.ZoneScene, args.MyUnitId);
 			
             UIComponent.Instance.CloseWindow(WindowID.WindowID_Lobby);
             await ETTask.CompletedTask;
