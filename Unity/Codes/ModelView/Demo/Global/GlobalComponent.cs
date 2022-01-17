@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace ET
 {
-    public class GlobalComponent: Entity
+    public class GlobalComponent: Entity, IAwake
     {
         public static GlobalComponent Instance;
         public Dictionary<long, GameObject> UnitId2GameObjects = new Dictionary<long, GameObject>();
