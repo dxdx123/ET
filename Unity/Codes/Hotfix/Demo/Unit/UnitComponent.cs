@@ -1,4 +1,6 @@
-﻿namespace ET
+﻿using System.Linq;
+
+namespace ET
 {
 	[ObjectSystem]
 	public class UnitComponentAwakeSystem : AwakeSystem<UnitComponent>
@@ -34,25 +36,28 @@
 			unit?.Dispose();
 		}
 		
+		
 		public static void RemoveAll(this UnitComponent self)
 		{
-			foreach (var unitId in self.idUnits.Keys)
+			foreach (var unitId in self.Children.Keys)
 			{
 				Unit unit;
-				self.idUnits.TryGetValue(unitId, out unit);
-				self.idUnits.Remove(unitId);
+				self.Children.TryGetValue(unitId, out Entity entity);
+				self.Children.Remove(unitId);
+				
+				unit = entity as Unit;
 				unit?.Dispose();
 			}
 		}
 
 		public static void RemoveNoDispose(this UnitComponent self, long id)
 		{
-			self.idUnits.Remove(id);
+			self.Children.Remove(id);
 		}
 
-		public static Unit[] GetAll(this UnitComponent self)
+		public static Entity[] GetAll(this UnitComponent self)
 		{
-			return self.idUnits.Values.ToArray();
+			return self.Children.Values.ToArray();
 		}
 	}
 }

@@ -20,7 +20,7 @@ namespace ET
 		}
 	}
 
-	public class CameraComponent : Entity, IAwake, ILateUpdate
+	public class CameraComponent : Entity, IAwake, ILateUpdate, IAwake<Scene, long>
 	{
 		// 战斗摄像机
 		public Camera mainCamera;
@@ -39,7 +39,9 @@ namespace ET
 		{
 			this.mainCamera = Camera.main;
 			var unitComponent = zoneScene.GetComponent<UnitComponent>();
-			this.Unit = unitComponent.idUnits[myUnitId];
+			var playerComponent = zoneScene.GetComponent<PlayerComponent>();
+			
+			this.Unit = unitComponent.GetChild<Unit>(playerComponent.MyId);
 		}
 
 		public void LateUpdate()
