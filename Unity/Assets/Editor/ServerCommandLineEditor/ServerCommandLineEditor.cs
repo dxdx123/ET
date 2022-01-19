@@ -29,13 +29,13 @@ namespace ET
             if (GUILayout.Button("导出Excel配置表"))
             {
                 string arguments = $"--AppType=ExcelExporter";
-                ProcessHelper.Run("Tools.dll", arguments, "../Bin/");
+                ProcessHelper.Run("dotnet Tools.dll ", arguments, "../../Bin/");
             }
             
             if (GUILayout.Button("生成Proto2CS"))
             {
                 string arguments = $"--AppType=Proto2CS";
-                ProcessHelper.Run("Tools.dll", arguments, "../Bin/");
+                ProcessHelper.Run("dotnet Tools.dll ", arguments, "../../Bin/");
             }
             
             if (GUILayout.Button("启动守护进程(Watcher)"))

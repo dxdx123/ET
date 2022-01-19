@@ -26,7 +26,10 @@ namespace ET
     {
         public static void AddUnitGo(this GlobalComponent self, long unitId , GameObject go)
         {
-            self.UnitId2GameObjects.Add(unitId, go);
+            if (!self.UnitId2GameObjects.TryGetValue(unitId, out go))
+            {
+                self.UnitId2GameObjects.Add(unitId, go);
+            }
         }
         
         public static void RemoveUnitGo(this GlobalComponent self, long unitId)

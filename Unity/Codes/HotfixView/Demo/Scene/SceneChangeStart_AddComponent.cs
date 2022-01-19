@@ -9,7 +9,6 @@ namespace ET
             // 加载场景资源
             await ResourcesComponent.Instance.LoadBundleAsync($"{currentScene.Name}.unity3d");
             // 切换到map场景
-
             SceneChangeComponent sceneChangeComponent = null;
             try
             {
@@ -22,9 +21,9 @@ namespace ET
             {
                 sceneChangeComponent?.Dispose();
             }
-			
 
             currentScene.AddComponent<OperaComponent>();
+            //currentScene.AddComponent<CameraComponent, Scene>(args.ZoneScene);
         }
     }
 }

@@ -9,27 +9,11 @@ namespace ET
 			// 销毁Map上的gameObject
 			GlobalComponent.Instance.RemoveAllUnitGo();
 
-			#region 切换到场景
-			// 加载场景资源
-			await ResourcesComponent.Instance.LoadBundleAsync("lobby.unity3d");
-			// 切换到lobby场景
-			SceneChangeComponent sceneChangeComponent = null;
-			try
-			{
-				sceneChangeComponent = Game.Scene.AddComponent<SceneChangeComponent>();
-				{
-					await sceneChangeComponent.ChangeSceneAsync("Lobby");
-				}
-			}
-			finally
-			{
-				sceneChangeComponent?.Dispose();
-			}
-
-			#endregion
-			
 			args.ZoneScene.RemoveComponent<OperaComponent>();
-			args.ZoneScene.RemoveComponent<CameraComponent>();
+			//args.ZoneScene.RemoveComponent<CameraComponent>();
+
+			CurrentScenesComponent currentScenesComponent = args.ZoneScene.GetComponent<CurrentScenesComponent>();
+			await SceneChangeHelper.SceneChangeTo(args.ZoneScene, "Lobby", currentScenesComponent.InstanceId);
 			
 			args.ZoneScene.GetComponent<UIComponent>().CloseWindow(WindowID.WindowID_Battle);
 			await args.ZoneScene.GetComponent<UIComponent>().ShowWindowAsync(WindowID.WindowID_Lobby);

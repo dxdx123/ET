@@ -11,16 +11,16 @@ namespace ET
 
 		public static void RegisterUIEvent(this DlgLobby self)
 		{
-			self.View.EButton_EnterMap.AddListener(() => { self.OnEnterMapClick(); });
+			self.View.EButton_EnterMap.AddListener(() => { self.OnEnterMapClick().Coroutine(); });
 		}
 
 		public static void ShowWindow(this DlgLobby self, Entity contextData = null)
 		{
 		}
 
-		public static void OnEnterMapClick(this DlgLobby self)
+		public static async ETTask OnEnterMapClick(this DlgLobby self)
 		{
-			EnterMapHelper.EnterMapAsync(self.ZoneScene()).Coroutine();
+			await EnterMapHelper.EnterMapAsync(self.ZoneScene());
 		}
 
 	}

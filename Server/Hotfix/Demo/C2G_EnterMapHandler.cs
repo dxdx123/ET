@@ -23,7 +23,7 @@ namespace ET
 			StartSceneConfig startSceneConfig = StartSceneConfigCategory.Instance.GetBySceneName(session.DomainZone(), "Map1");
 			response.MyId = player.Id;
 			
-			Log.Info($"玩家{player.UnitId}进入房间");
+			Log.Info($"玩家{player.Id}进入房间");
 			reply();
 			
 			// 开始传送

@@ -9,7 +9,8 @@ namespace ET
 		protected override async ETTask Run(Session session, C2G_QuitMap request, G2C_QuitMap response, Action reply)
 		{
 			// 在map服务器上销毁战斗Unit
-			long mapInstanceId = StartSceneConfigCategory.Instance.GetBySceneName(session.DomainZone(), "Map").InstanceId;
+			long mapInstanceId = StartSceneConfigCategory.Instance.GetBySceneName(session.DomainZone(), "Map1").InstanceId;
+			
 			await ActorMessageSenderComponent.Instance.Call(mapInstanceId,
 				new G2M_UnitQuitMap() { UnitId = request.UnitId, GateSessionId = session.InstanceId });
 			

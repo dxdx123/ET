@@ -8,7 +8,7 @@
         public static async ETTask QuitMap(Scene zoneScene)
         {
             var gateSession = zoneScene.GetComponent<SessionComponent>().Session;
-            var playerComponent = zoneScene.GetComponent<PlayerComponent>();
+            var playerComponent = gateSession.DomainScene().CurrentScene().GetComponent<PlayerComponent>();
             var unitComponent = gateSession.DomainScene().CurrentScene().GetComponent<UnitComponent>();
             var quit = await gateSession.Call(new C2G_QuitMap() { UnitId = playerComponent.MyId });
             if (quit.Error == 0)

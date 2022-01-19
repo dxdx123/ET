@@ -7,7 +7,7 @@ namespace ET
 		protected override async ETTask Run(Session session, M2C_UnitQuitMap message)
 		{	
 			// 逻辑层处理玩家退出
-			UnitComponent unitComponent = session.Domain.GetComponent<UnitComponent>();
+			UnitComponent unitComponent = session.DomainScene().CurrentScene().GetComponent<UnitComponent>();
 			PlayerComponent playerComponent = session.DomainScene().CurrentScene().GetComponent<PlayerComponent>();
 			unitComponent.Remove(message.UnitId);
 			Log.Info($"房间还剩{playerComponent.Children.Count}个玩家");
