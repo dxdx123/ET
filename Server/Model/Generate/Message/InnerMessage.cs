@@ -316,10 +316,9 @@ namespace ET
 
 	}
 
-	[ResponseType(nameof(M2G_UnitQuitMap))]
 	[Message(InnerOpcode.G2M_UnitQuitMap)]
 	[ProtoContract]
-	public partial class G2M_UnitQuitMap: Object, IActorRequest
+	public partial class G2M_UnitQuitMap: Object, IActorLocationMessage
 	{
 		[ProtoMember(90)]
 		public int RpcId { get; set; }

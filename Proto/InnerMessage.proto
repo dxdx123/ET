@@ -150,8 +150,8 @@ message M2M_UnitTransferResponse // IActorResponse
 	int64 NewInstanceId = 4;
 }
 
-//ResponseType M2G_UnitQuitMap
-message G2M_UnitQuitMap // IActorRequest
+#//ResponseType M2G_UnitQuitMap
+message G2M_UnitQuitMap // IActorLocationMessage
 {
 	int32 RpcId = 90;
 	int64 ActorId = 93;

@@ -4,23 +4,19 @@ using UnityEngine;
 namespace ET
 {
 	[ActorMessageHandler]
-	public class G2M_UnitQuitMapHandler : AMActorRpcHandler<Scene, G2M_UnitQuitMap, M2G_UnitQuitMap>
+	public class G2M_UnitQuitMapHandler : AMActorLocationHandler<Unit, G2M_UnitQuitMap>
 	{
-		protected override async ETTask Run(Scene scene, G2M_UnitQuitMap request, M2G_UnitQuitMap response, Action reply)
+		protected override async ETTask Run(Unit unit, G2M_UnitQuitMap message)
 		{
 			// 广播给其他人
-			UnitComponent unitComponent = scene.GetComponent<UnitComponent>();
-			Unit unit = unitComponent.Get(request.UnitId);
-			
 			M2C_UnitQuitMap quitUnit = new M2C_UnitQuitMap();
-			quitUnit.UnitId = request.UnitId;
+			quitUnit.UnitId = message.UnitId;
 			MessageHelper.Broadcast(unit, quitUnit);
 
 			// Unit退出房间
-			unitComponent.Remove(request.UnitId);
-			Log.Info($"玩家{request.UnitId}主动退出房间");
+			unit?.Dispose();
+			Log.Info($"玩家{message.UnitId}主动退出房间");
 			
-			reply();
 			await ETTask.CompletedTask;
 		}
 	}
