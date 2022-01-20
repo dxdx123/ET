@@ -63,8 +63,8 @@ message MoveInfo
 message C2G_QuitMap // IRequest
 {
 	int32 RpcId = 90;
-	// 自己的unit id
-	int64 UnitId = 1;
+	// 自己的unitId
+	int64 MyId = 1;
 }
 
 message G2C_QuitMap // IResponse
@@ -78,7 +78,7 @@ message M2C_UnitQuitMap // IActorMessage
 {
 	int32 RpcId = 90;
 	int64 ActorId = 93;
-	// 退出的玩家Unit Id
+	// 退出的玩家UnitId
 	int64 UnitId = 1;
 	//repeated UnitInfo Units = 2;
 }

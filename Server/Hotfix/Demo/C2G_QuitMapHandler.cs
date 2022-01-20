@@ -19,7 +19,7 @@ namespace ET
 			long sceneInstanceId = StartSceneConfigCategory.Instance.GetBySceneName(session.DomainZone(), mapName).InstanceId;
 			
 			await ActorMessageSenderComponent.Instance.Call(sceneInstanceId,
-				new G2M_UnitQuitMap() { UnitId = request.UnitId, GateSessionId = session.InstanceId });
+				new G2M_UnitQuitMap() { UnitId = request.MyId, GateSessionId = session.InstanceId });
 			
 			reply();
 		}

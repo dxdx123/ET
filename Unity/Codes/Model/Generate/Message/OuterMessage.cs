@@ -129,9 +129,9 @@ namespace ET
 		[ProtoMember(90)]
 		public int RpcId { get; set; }
 
-// 自己的unit id
+// 自己的unitId
 		[ProtoMember(1)]
-		public long UnitId { get; set; }
+		public long MyId { get; set; }
 
 	}
 
@@ -160,7 +160,7 @@ namespace ET
 		[ProtoMember(93)]
 		public long ActorId { get; set; }
 
-// 退出的玩家Unit Id
+// 退出的玩家UnitId
 		[ProtoMember(1)]
 		public long UnitId { get; set; }
 

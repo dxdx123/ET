@@ -7,10 +7,10 @@
     {
         public static async ETTask QuitMap(Scene zoneScene)
         {
-            var gateSession = zoneScene.GetComponent<SessionComponent>().Session;
-            var playerComponent = gateSession.DomainScene().CurrentScene().GetComponent<PlayerComponent>();
-            var unitComponent = gateSession.DomainScene().CurrentScene().GetComponent<UnitComponent>();
-            var quit = await gateSession.Call(new C2G_QuitMap() { UnitId = playerComponent.MyId });
+            Session gateSession = zoneScene.GetComponent<SessionComponent>().Session;
+            PlayerComponent playerComponent = zoneScene.GetComponent<PlayerComponent>();
+            UnitComponent unitComponent = gateSession.DomainScene().CurrentScene().GetComponent<UnitComponent>();
+            G2C_QuitMap quit = (G2C_QuitMap) await gateSession.Call(new C2G_QuitMap() { MyId = playerComponent.MyId });
             if (quit.Error == 0)
             {
                 await Game.EventSystem.PublishAsync(new EventType.QuitMapFinish() { ZoneScene = zoneScene, UnitId = playerComponent.MyId });
