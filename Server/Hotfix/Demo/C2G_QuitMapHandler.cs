@@ -9,11 +9,10 @@ namespace ET
 		protected override async ETTask Run(Session session, C2G_QuitMap request, G2C_QuitMap response, Action reply)
 		{
 			Player myPlayer = session.GetComponent<SessionPlayerComponent>().GetMyPlayer();
-			UnitComponent unitComponent = session.DomainScene().GetComponent<UnitComponent>();
+			GateMapComponent gateMapComponent = myPlayer.GetComponent<GateMapComponent>();
+			UnitGateComponent unitGateComponent = gateMapComponent.DomainScene().GetComponent<UnitGateComponent>();
+			UnitComponent unitComponent = unitGateComponent.GetComponent<UnitComponent>();
 			Unit unit = unitComponent.GetChild<Unit>(myPlayer.Id);
-			//GateMapComponent gateMapComponent = myPlayer.GetComponent<GateMapComponent>();
-			//UnitGateComponent unitGateComponent = gateMapComponent.DomainScene().GetComponent<UnitGateComponent>();
-			//PlayerComponent playerComponent = session.GetComponent<PlayerComponent>();
 
 			// 在map服务器上销毁战斗Unit
 			string mapName = unit.DomainScene().Name;
