@@ -157,6 +157,8 @@ message G2M_UnitQuitMap // IActorLocationMessage
 	int64 ActorId = 93;
 	int64 UnitId = 1;
 	int64 GateSessionId = 2;
+	int64 SceneInstanceId = 3;
+	string SceneName = 4;
 }
 
 message M2G_UnitQuitMap // IActorResponse

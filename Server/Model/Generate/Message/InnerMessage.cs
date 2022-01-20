@@ -332,6 +332,12 @@ namespace ET
 		[ProtoMember(2)]
 		public long GateSessionId { get; set; }
 
+		[ProtoMember(3)]
+		public long SceneInstanceId { get; set; }
+
+		[ProtoMember(4)]
+		public string SceneName { get; set; }
+
 	}
 
 	[Message(InnerOpcode.M2G_UnitQuitMap)]
