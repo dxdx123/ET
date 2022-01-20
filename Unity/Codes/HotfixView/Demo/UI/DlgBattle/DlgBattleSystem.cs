@@ -11,16 +11,16 @@ namespace ET
 
 		public static void RegisterUIEvent(this DlgBattle self)
 		{
-			self.View.EButton_ExitBtnButton.AddListener(() => { self.OnExitClick(); });
+			self.View.EButton_ExitBtnButton.AddListener(() => { self.OnExitClick().Coroutine(); });
 		}
 
 		public static void ShowWindow(this DlgBattle self, Entity contextData = null)
 		{
 		}
 
-		public static void OnExitClick(this DlgBattle self)
+		public static async ETTask OnExitClick(this DlgBattle self)
 		{
-			QuitMapHelper.QuitMap(self.DomainScene());
+			await QuitMapHelper.QuitMap(self.ZoneScene());
 		}
 
 	}

@@ -8,10 +8,18 @@ namespace ET
 	{
 		protected override async ETTask Run(Session session, C2G_QuitMap request, G2C_QuitMap response, Action reply)
 		{
+			Player myPlayer = session.GetComponent<SessionPlayerComponent>().GetMyPlayer();
+			UnitComponent unitComponent = session.DomainScene().GetComponent<UnitComponent>();
+			Unit unit = unitComponent.GetChild<Unit>(myPlayer.Id);
+			//GateMapComponent gateMapComponent = myPlayer.GetComponent<GateMapComponent>();
+			//UnitGateComponent unitGateComponent = gateMapComponent.DomainScene().GetComponent<UnitGateComponent>();
+			//PlayerComponent playerComponent = session.GetComponent<PlayerComponent>();
+
 			// 在map服务器上销毁战斗Unit
-			long mapInstanceId = StartSceneConfigCategory.Instance.GetBySceneName(session.DomainZone(), "Map1").InstanceId;
+			string mapName = unit.DomainScene().Name;
+			long sceneInstanceId = StartSceneConfigCategory.Instance.GetBySceneName(session.DomainZone(), mapName).InstanceId;
 			
-			await ActorMessageSenderComponent.Instance.Call(mapInstanceId,
+			await ActorMessageSenderComponent.Instance.Call(sceneInstanceId,
 				new G2M_UnitQuitMap() { UnitId = request.UnitId, GateSessionId = session.InstanceId });
 			
 			reply();
