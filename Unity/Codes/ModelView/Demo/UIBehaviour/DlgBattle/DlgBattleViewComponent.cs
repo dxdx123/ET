@@ -73,12 +73,30 @@ namespace ET
      		}
      	}
 
+		public UnityEngine.UI.Text ELabel_PlayerInfoText
+     	{
+     		get
+     		{
+     			if (this.uiTransform == null)
+     			{
+     				Log.Error("uiTransform is null.");
+     				return null;
+     			}
+     			if( this.m_ELabel_PlayerInfoText == null )
+     			{
+		    		this.m_ELabel_PlayerInfoText = UIFindHelper.FindDeepChild<UnityEngine.UI.Text>(this.uiTransform.gameObject,"EGBackGround/ELabel_PlayerInfo");
+     			}
+     			return this.m_ELabel_PlayerInfoText;
+     		}
+     	}
+
 		public void DestroyWidget()
 		{
 			this.m_EGBackGroundRectTransform = null;
 			this.m_EButton_ExitBtnButton = null;
 			this.m_EButton_ExitBtnImage = null;
 			this.m_E_TipText = null;
+			this.m_ELabel_PlayerInfoText = null;
 			this.uiTransform = null;
 		}
 
@@ -86,6 +104,7 @@ namespace ET
 		private UnityEngine.UI.Button m_EButton_ExitBtnButton = null;
 		private UnityEngine.UI.Image m_EButton_ExitBtnImage = null;
 		private UnityEngine.UI.Text m_E_TipText = null;
+		private UnityEngine.UI.Text m_ELabel_PlayerInfoText = null;
 		public Transform uiTransform = null;
 	}
 }
