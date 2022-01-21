@@ -15,7 +15,7 @@
             {
                 await Game.EventSystem.PublishAsync(new EventType.QuitMapFinish() { ZoneScene = zoneScene, UnitId = playerComponent.MyId });
                 // 销毁Unit逻辑对象
-                unitComponent.RemoveAll();
+                //unitComponent.RemoveAll();
                 Log.Info($"玩家[{playerComponent.MyId}]主动退出房间");
             }
         }

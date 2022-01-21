@@ -5,6 +5,7 @@
 		protected override async ETTask Run(EventType.EnterMapFinish args)
 		{
 			await args.ZoneScene.GetComponent<UIComponent>().ShowWindowAsync(WindowID.WindowID_Battle);
+			args.ZoneScene.AddComponent<CameraComponent, Scene>(args.ZoneScene);
 		}
 	}
 }

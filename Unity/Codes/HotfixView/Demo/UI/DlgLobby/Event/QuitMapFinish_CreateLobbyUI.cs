@@ -10,10 +10,7 @@ namespace ET
 			GlobalComponent.Instance.RemoveAllUnitGo();
 
 			args.ZoneScene.RemoveComponent<OperaComponent>();
-			//args.ZoneScene.RemoveComponent<CameraComponent>();
-
-			CurrentScenesComponent currentScenesComponent = args.ZoneScene.GetComponent<CurrentScenesComponent>();
-			await SceneChangeHelper.SceneChangeTo(args.ZoneScene, "Lobby", currentScenesComponent.InstanceId);
+			args.ZoneScene.RemoveComponent<CameraComponent>();
 			
 			args.ZoneScene.GetComponent<UIComponent>().CloseWindow(WindowID.WindowID_Battle);
 			await args.ZoneScene.GetComponent<UIComponent>().ShowWindowAsync(WindowID.WindowID_Lobby);

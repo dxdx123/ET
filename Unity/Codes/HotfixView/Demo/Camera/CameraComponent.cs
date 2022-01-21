@@ -49,6 +49,8 @@ namespace ET
 
 		private void UpdatePosition()
 		{
+			if(this.mainCamera == null) return;
+			
 			var mainCameraTransform = this.mainCamera.transform;
 			Vector3 cameraPos = mainCameraTransform.position;
 			var offsetX = 5; 

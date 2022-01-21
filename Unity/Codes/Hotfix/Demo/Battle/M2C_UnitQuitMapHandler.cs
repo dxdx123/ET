@@ -10,7 +10,7 @@ namespace ET
 			UnitComponent unitComponent = session.DomainScene().CurrentScene().GetComponent<UnitComponent>();
 			PlayerComponent playerComponent = session.DomainScene().CurrentScene().GetComponent<PlayerComponent>();
 			unitComponent.Remove(message.UnitId);
-			Log.Info($"房间还剩{playerComponent.Children.Count}个玩家");
+			//Log.Info($"房间还剩{playerComponent.Children.Count}个玩家");
 			
 			await Game.EventSystem.PublishAsync(new EventType.LeaveMapFinish() { ZoneScene = session.DomainScene(), UnitId = message.UnitId });
 		}
