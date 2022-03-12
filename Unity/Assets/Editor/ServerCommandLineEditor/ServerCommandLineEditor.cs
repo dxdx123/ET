@@ -1,24 +1,70 @@
-﻿using UnityEditor;
+﻿using System.IO;
+using UnityEditor;
 using UnityEngine;
 
 namespace ET
 {
     public class ServerCommandLineEditor: EditorWindow
     {
+
+        [MenuItem("Tools/打开服务器选项 _F4")]
+        private static void ShowWindow()
+        {
+            GetWindow(typeof (ServerCommandLineEditor));
+        }
+        
         public void OnGUI()
         {
-            if (GUILayout.Button("启动"))
+            GUILayout.BeginVertical();
+
+            if (GUILayout.Button("导出Excel配置表"))
             {
-                string arguments = $"";
-                ProcessHelper.Run("App.exe", arguments, "../Bin/");
+                string arguments = $"--AppType=ExcelExporter";
+                ProcessHelper.Run("Tools.exe ", arguments, "../Bin/");
+            }
+            
+            if (GUILayout.Button("生成Proto2CS"))
+            {
+                string arguments = $"--AppType=Proto2CS";
+                ProcessHelper.Run("Tools.exe ", arguments, "../Bin/");
+            }
+            
+            if (GUILayout.Button("启动守护进程(Watcher)"))
+            {
+                string arguments = $"--AppType=Watcher --Process=1 --Console=1";
+                ProcessHelper.Run("Server.exe", arguments, "../Bin/");
+            }
+            
+            if (GUILayout.Button("启动机器人"))
+            {
+                string arguments = $"--AppType=Robot --Console=1";
+                ProcessHelper.Run("Robot.exe", arguments, "../Bin/");
+            }
+            
+            if (GUILayout.Button("启动服务器"))
+            {
+                string arguments = $"--AppType=Server --Console=1";
+                ProcessHelper.Run("Server.exe", arguments, "../Bin/");
+            }
+            
+            if (GUILayout.Button("启动MongoDB数据库"))
+            {
+                string mongodbHome = "../Tools/MongoDB";
+                string mongodbDataDir = $"{mongodbHome}/bin/db";
+                if (!Directory.Exists(mongodbDataDir))
+                {
+                    Directory.CreateDirectory(mongodbDataDir);
+                }
+                ProcessHelper.Run("mongod", @"--dbpath=db", $"{mongodbHome}/bin/");
             }
 
-            if (GUILayout.Button("启动数据库"))
+            if (GUILayout.Button("刷新资源"))
             {
-                ProcessHelper.Run("mongod", @"--dbpath=db", "../Database/bin/");
+                AssetDatabase.Refresh();
             }
-
-            GUILayout.EndHorizontal();
+            
+            //GUIUtility.ExitGUI();
+            GUILayout.EndVertical();
         }
     }
 }
