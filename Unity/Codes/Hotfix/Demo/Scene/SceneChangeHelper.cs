@@ -1,8 +1,9 @@
-﻿namespace ET
+﻿using System;
+
+namespace ET
 {
     public static class SceneChangeHelper
     {
-        // 场景切换协程
         public static async ETTask SceneChangeTo(Scene zoneScene, string sceneName, long sceneInstanceId)
         {
             zoneScene.RemoveComponent<AIComponent>();
@@ -27,6 +28,21 @@
 
             // 通知等待场景切换的协程
             zoneScene.GetComponent<ObjectWait>().Notify(new WaitType.Wait_SceneChangeFinish());
+
+            try
+            {
+                Session session = zoneScene.GetComponent<SessionComponent>().Session;
+                var response = (M2C_TestActorLocationResponse)await session.Call(new C2M_TestActorLocationRequest() { Content = "0000000000" });
+                Log.Debug($"========={response.Content}=========");
+                
+                session.Send(new C2M_TestActorLocationMessage(){Content = "222222222"});
+            }
+            catch (Exception e)
+            {
+                Log.Error(e.ToString());
+            }
         }
+
+        // 场景切换协程
     }
 }
