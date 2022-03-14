@@ -11,17 +11,35 @@ namespace ET
 	{
 		public static void RegisterUIEvent(this DlgLogin self)
 		{
-			self.View.EButton_LoginBtn.AddListener(() => { self.OnLoginClick(); });
+			self.View.EButton_LoginBtn.AddListenerAsync(() => { return self.OnLoginClick(); });
 		}
 
 		public static void ShowWindow(this DlgLogin self, Entity contextData = null)
 		{
 		}
 
-		public static void OnLoginClick(this DlgLogin self)
+		public static async ETTask OnLoginClick(this DlgLogin self)
 		{
-			LoginHelper.Login(self.DomainScene(), ConstValue.LoginAddress,
-				self.View.EInputField_Account.text, self.View.EInputField_Password.text);
+			try
+			{
+				int errorCode = await LoginHelper.Login(self.DomainScene(),
+					ConstValue.LoginAddress,
+					self.View.EInputField_Account.text,
+					self.View.EInputField_Password.text);
+
+				if (errorCode != ErrorCode.ERR_Success)
+				{
+					Log.Error(errorCode.ToString());
+					return;
+				}
+				
+				self.DomainScene().GetComponent<UIComponent>().HideWindow(WindowID.WindowID_Login);
+				self.DomainScene().GetComponent<UIComponent>().ShowWindow(WindowID.WindowID_Lobby);
+			}
+			catch (Exception e)
+			{
+				Log.Error(e.ToString());
+			}
 		}
 
 	}

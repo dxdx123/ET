@@ -13,5 +13,11 @@ namespace ET
         // 这里配置逻辑层的错误码
         // 110000 - 200000是抛异常的错误
         // 200001以上不抛异常
+
+        public const int ERR_NetworkError = 200002; // 网络错误
+        public const int ERR_LoginInfoIsNull = 200003; // 账号信息错误
+        public const int ERR_AccountInBlackListError = 200004; // 账号在白名单中
+        public const int ERR_LoginPasswordError = 200005; // 登陆密码错误
+        public const int ERR_RequestRepeatedly = 200006; // 重复多次请求
     }
 }

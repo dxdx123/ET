@@ -1,5 +1,3 @@
-
-
 using System.Net;
 
 namespace ET
@@ -18,7 +16,8 @@ namespace ET
             Scene scene = EntitySceneFactory.CreateScene(id, instanceId, zone, sceneType, name, parent);
 
             scene.AddComponent<MailBoxComponent, MailboxType>(MailboxType.UnOrderMessageDispatcher);
-
+            scene.AddComponent<DBManagerComponent>();
+            
             switch (scene.SceneType)
             {
                 case SceneType.Realm:
@@ -35,6 +34,15 @@ namespace ET
                     break;
                 case SceneType.Location:
                     scene.AddComponent<LocationComponent>();
+                    break;
+                case SceneType.Account:
+                    scene.AddComponent<NetKcpComponent, IPEndPoint, int>(startSceneConfig.OuterIPPort,
+                        SessionStreamDispatcherType.SessionStreamDispatcherServerOuter);
+                    scene.AddComponent<TokenComponent>();
+                    scene.AddComponent<AccountSessionsComponent>();
+                    break;
+                case SceneType.LoginCenter:
+                    scene.AddComponent<LoginInfoRecordComponent>();
                     break;
             }
 
